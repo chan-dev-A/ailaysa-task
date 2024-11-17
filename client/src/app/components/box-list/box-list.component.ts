@@ -39,6 +39,7 @@ export class BoxListComponent implements OnInit {
       if(res && res.success){
         console.log(res)
         this.fetchList();
+        this.name.reset();
       } else {
         console.error(res.message);
       }

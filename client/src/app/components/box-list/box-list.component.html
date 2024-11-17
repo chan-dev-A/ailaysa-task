@@ -1,17 +1,17 @@
-<div>
-  <input [formControl]="name" required type="text">
+<div class="add" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+  <p *ngIf="!name || name.invalid"> * Title Required *</p>
+  <input [formControl]="name" required type="text" placeholder="Please Enter Box Title To Add !">
   <button [disabled]="name.invalid"  (click)="addBox()" >Add Box</button>
-  <p *ngIf="!name || name.invalid">Title Required</p>
 </div>
 <div fxLayout="row wrap" fxLayoutAlign="start start" fxLayout.xs="column" fxLayoutAlign.xs="center center" >
   <ng-container *ngFor="let box of list;let i=index">
-    <div class="box" (click)="view(box)">
-      <div class="top" fxLayout="row wrap" fxLayoutAlign="space between">
-        <div>{{i+1}}</div>
-        <div class="remove" (click)="remove(box.id,$event)">X</div>
+    <div class="box" (click)="view(box)" fxLayout="column">
+      <div class="top" fxLayout="row" fxLayoutAlign="space-between center" fxFlex="none">
+        <div class="text">{{i + 1}}</div>
+        <div class="remove" (click)="remove(box.id, $event)">X</div>
       </div>
-      <div class="center">
-        {{box?.title}}
+      <div class="center text" fxLayoutAlign="center center" fxFlex="1 1 auto">
+        {{ box?.title }}
       </div>
     </div>
   </ng-container>
