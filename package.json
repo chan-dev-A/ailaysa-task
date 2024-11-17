@@ -1,0 +1,9 @@
+{
+  "name": "fullstack-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npm run start:backend & npm run start:client",
+    "start:client": "cd client && ng serve",
+    "start:backend": "cd backend && nodemon server.js"
+  }
+}
