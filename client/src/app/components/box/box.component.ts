@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../../services/api.service";
 import {ActivatedRoute} from "@angular/router";
-import {Model} from "../../model/model";
+import {Box} from "../../model/model";
 
 @Component({
   selector: 'app-box',
@@ -11,7 +11,7 @@ import {Model} from "../../model/model";
 export class BoxComponent implements OnInit {
 
   id!:number
-  data:Model[] =[];
+  data:Box[] =[];
 
   constructor(private activatedRoute: ActivatedRoute,private apiService: ApiService) {
   }

@@ -14,10 +14,6 @@ app.use(bodyParser.json());
 app.use("/api",require('./routes/routes'))
 
 
-app.get('/test', (req, res) => {
-    res.send({ message: 'Hello from Node.js!' });
-});
-
 mySqlPool.query('SELECT 1').then(() => {
     console.log('db connection established');
 

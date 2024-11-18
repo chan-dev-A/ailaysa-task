@@ -1,116 +1,113 @@
 const db = require('../config/db.js');
 
-const getBoxList = async (req, res) => {
-    try{
-        const data = await db.query("SELECT * FROM box_table");
-        if(!data){
-            return res.status(404).send({
-                success: false,
-                message: 'No records found'
-            })
-        }else{
-            return res.status(200).send({
-                success:true,
-                message:'List fetched',
-                data:data[0]
-            })
-        }
-    }catch(err){
-        res.status(500).send({
-            message: err.message,
-            success: false,
-            err
-        })
-    }
-}
+const handleError = (res, err) => {
+    res.status(500).send({
+        message: err.message || 'Internal Server Error',
+        success: false,
+        error: err,
+    });
+};
 
-const getBoxById = async (req, res) => {
-    try{
-        const boxId= req.params.id;
-        if(!boxId){
-            return res.status(404).send({
-                success: false,
-                message: 'Invalid or Provide boxId'
-            })
-        }
-        const data = await db.query("SELECT * FROM box_table where id=?",[boxId]);
-        if(!data){
+const getBoxList = async (req, res) => {
+    try {
+        const [data] = await db.query('SELECT * FROM box_table');
+        if (data.length === 0) {
             return res.status(404).send({
                 success: false,
                 message: 'No records found',
+            });
+        }
+        res.status(200).send({
+            success: true,
+            message: 'List fetched successfully',
+            data,
+        });
+    } catch (err) {
+        handleError(res, err);
+    }
+};
 
-            })
-        }else {
-            return res.status(200).send({
-                success:true,
-                message:'Fetched Successfully',
-                data:data[0]
-            })
+const getBoxById = async (req, res) => {
+    try {
+        const { id: boxId } = req.params;
+        if (!boxId) {
+            return res.status(400).send({
+                success: false,
+                message: 'Invalid or missing box ID',
+            });
         }
 
-    }catch(err){
-        res.status(500).send({
-            message: err.message,
-            success: false,
-            err
-        })
+        const [data] = await db.query('SELECT * FROM box_table WHERE id = ?', [boxId]);
+        if (data.length === 0) {
+            return res.status(404).send({
+                success: false,
+                message: 'No records found for the provided ID',
+            });
+        }
+
+        res.status(200).send({
+            success: true,
+            message: 'Box fetched successfully',
+            data: data[0],
+        });
+    } catch (err) {
+        handleError(res, err);
     }
-}
+};
 
 const addBoxInfo = async (req, res) => {
     try {
-        const {title} = req.body;
-        if(!title){
+        const { title } = req.body;
+        if (!title) {
             return res.status(400).send({
                 success: false,
-                message: 'Title is required'
-            })
-        }
-        console.log(title)
-        const data = await db.query('INSERT INTO box_table (`title`) VALUES (?)',[title])
-        if(!data){
-            return res.status(400).send({
-                success: false,
-                message: 'Data Addition Failed'
-            })
-        }else{
-            return res.status(200).send({
-                success:true,
-                message:'Info Added Successfully'
-            })
+                message: 'Title is required',
+            });
         }
 
-    }catch(err){
-        res.status(500).send({
-            message: err.message,
-            success: false,
-            err
-        })
+        const [result] = await db.query('INSERT INTO box_table (`title`) VALUES (?)', [title]);
+        if (result.affectedRows === 0) {
+            return res.status(400).send({
+                success: false,
+                message: 'Failed to add box',
+            });
+        }
+
+        res.status(201).send({
+            success: true,
+            message: 'Box added successfully',
+            boxId: result.insertId,
+        });
+    } catch (err) {
+        handleError(res, err);
     }
-}
+};
 
 const removeBox = async (req, res) => {
-    try{
-        const {id} = req.params;
-        if(!id){
+    try {
+        const { id } = req.params;
+        if (!id) {
             return res.status(400).send({
                 success: false,
-                message: 'Need to Pass Id'
-            })
+                message: 'Box ID is required',
+            });
         }
-         await db.query("DELETE FROM box_table where id = ?",[id]);
+
+        const [result] = await db.query('DELETE FROM box_table WHERE id = ?', [id]);
+        if (result.affectedRows === 0) {
+            return res.status(404).send({
+                success: false,
+                message: 'Box not found',
+            });
+        }
+
         res.status(200).send({
-            success:true,
-            message:'Removed Successfully'
-        })
-    }catch(err){
-        res.status(500).send({
-            message: err.message,
-            success: false,
-            err
-        })
+            success: true,
+            message: 'Box removed successfully',
+        });
+    } catch (err) {
+        handleError(res, err);
     }
-}
+};
 
-
-module.exports = {getBoxList,getBoxById,addBoxInfo,removeBox}
+module.exports = { getBoxList, getBoxById, addBoxInfo, removeBox };

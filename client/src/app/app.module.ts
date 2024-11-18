@@ -7,8 +7,9 @@ import { BoxComponent } from './components/box/box.component';
 import { BoxListComponent } from './components/box-list/box-list.component';
 import {FlexModule} from "@angular/flex-layout";
 import {ApiService} from "./services/api.service";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {InterceptorService} from "./services/interceptor.service";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,12 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [ApiService],
+  providers: [ApiService, {
+    provide:HTTP_INTERCEPTORS,
+    useClass: InterceptorService,
+    multi: true,
+
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
