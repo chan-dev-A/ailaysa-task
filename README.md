@@ -30,10 +30,6 @@ A package manager: npm (default with Node.js)
 
 Clone the Repository:
 
-git clone https://github.com/your-username/fullstack-app.git
-
-cd fullstack-app
-
 Install Dependencies:
 
 Install root-level dependencies:
