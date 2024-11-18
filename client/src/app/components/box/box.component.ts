@@ -11,7 +11,7 @@ import {Box} from "../../model/model";
 export class BoxComponent implements OnInit {
 
   id!:number
-  data:Box[] =[];
+  data:any;
 
   constructor(private activatedRoute: ActivatedRoute,private apiService: ApiService) {
   }
@@ -22,6 +22,8 @@ export class BoxComponent implements OnInit {
       this.apiService.getById(this.id).subscribe(res=>{
         if(res && res.success){
           this.data = res.data;
+        } else{
+          console.error(res.message);
         }
       })
     }
